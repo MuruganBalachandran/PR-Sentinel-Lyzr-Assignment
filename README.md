@@ -1,6 +1,9 @@
 # PR Sentinel — Frontend
 
 ## Live URL: [live here](https://pr-sentinel-lyzr-assignment.vercel.app/)
+<img width="1898" height="966" alt="Image" src="https://github.com/user-attachments/assets/88be8163-aec3-4507-9448-c5b4b7a2248a" />
+
+<img width="1897" height="964" alt="Image" src="https://github.com/user-attachments/assets/7588c1e5-9541-4d3c-97a3-759811f6e52c" />
 
 ---
 
