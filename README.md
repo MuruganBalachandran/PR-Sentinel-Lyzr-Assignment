@@ -115,9 +115,3 @@ Set these in **Supabase**, Vercel, Netlify, or your secret manager:
 - Never commit secrets; store them in `.env`
 - `.env` is already included in `.gitignore`
 
-### Remove a committed `.env`
-
-```powershell
-git rm --cached .env
-git commit -m "Remove .env from repository"
-git push
