@@ -1,17 +1,33 @@
 ````markdown
 # PR Sentinel — Local project
 
-## Project info
+## Live frontend
 
-This repository contains the PR Sentinel frontend. Edit locally or use your preferred deployment platform.
+Live frontend: <YOUR_LIVE_FRONTEND_URL>  
+Replace the placeholder with your deployed app URL (Vercel/Netlify/etc.).
 
-## How can I edit this code?
+## About the approach
+
+PR Sentinel implements an AI-powered PR review pipeline with these steps:
+
+- **Read PR diffs:** The client (`src/components/PRReviewForm.tsx`) submits either a `prUrl` or a `manualDiff` to a serverless function. For `prUrl` the function fetches the raw PR diff from the GitHub API using a PAT; for `manualDiff` it uses the pasted diff text directly.
+- **Parse & understand changes:** The server passes the raw diff into an LLM prompt so the agent can reason about added/removed lines. (There is currently no dedicated diff parser in the repo; the AI consumes the diff text.)
+- **Multi-agent reasoning:** The server can invoke multiple agent backends (`gemini`, `lyzr`, `kimi`) depending on the selected `agentType`. Each integration sends a strict prompt asking the model to output a JSON array of findings.
+- **Identify issues:** The AI is instructed to categorize findings as `security`, `logic`, or `readability`, and include `file`, `line`, `severity`, `title`, `description`, and `suggestion` for each issue.
+- **Structured review comments:** The function parses AI output (with parsing fallbacks) and returns a typed JSON result to the client for display.
+
+Key files:
+- Serverless reviewer: `supabase/functions/review-pr/index.ts`
+- Client form: `src/components/PRReviewForm.tsx`
+- Frontend Supabase client: `src/integrations/supabase/client.ts`
+
+## How to install and run
 
 You can work locally with your own IDE. The only requirement is Node.js & npm (or an alternative package manager).
 
-Quick start:
+Quick start (PowerShell):
 
-```sh
+```powershell
 # Clone the repository
 git clone <YOUR_GIT_URL>
 cd <YOUR_PROJECT_NAME>
@@ -23,80 +39,35 @@ npm install
 npm run dev
 ```
 
-Alternatively, edit files directly on GitHub or use Codespaces if you prefer.
+Alternatively, edit files directly on GitHub or use Codespaces.
 
-## What technologies are used for this project?
+## Tools & Frameworks used
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Vite**: Development tooling and build
+- **TypeScript**: Static typing
+- **React**: UI
+- **shadcn-ui**: UI components built on Radix
+- **Tailwind CSS**: Utility-first styling
+- **Supabase Functions (Deno)**: Serverless review function
+- **Integrations**: optional external AI backends (`Gemini`, `Lyzr`, `Groq/Kimi`)
 
-## How can I deploy this project?
+## Deployment
 
-Deploy using your preferred hosting provider (Netlify, Vercel, Cloudflare Pages, etc.) and follow their documentation for Vite/React apps.
+Deploy the frontend to Vercel, Netlify, or Cloudflare Pages. The review function is implemented as a Supabase Edge Function (Deno). For production:
 
-**Protecting API Keys**
+- Put API keys and secrets in your hosting provider or Supabase secret manager (do not commit them).
+- Ensure `GITHUB_PAT`, `GEMINI_API_KEY`, `LYZR_API_KEY`, or `GROQ_API_KEY` are set in the function environment.
+- Restrict CORS and require authentication on sensitive endpoints if exposing review functionality to the public.
 
-- **Don't commit secrets:** Keep real API keys and tokens out of source control. Use a local `.env` file for development and never commit it.
-- **Use the included example:** Copy `.env.example` to `.env` and populate the real values locally.
-- **Ignore `.env`:** This repository includes `.env` in `.gitignore`. If you previously committed a `.env`, untrack it (commands below).
-- **Remove secrets from git history:** If secrets were committed earlier, remove them from the repository history (with `git filter-repo` or BFG) and rotate the exposed keys immediately.
+**Protecting API keys**
 
-- **Git commands (PowerShell):**
+- Don't commit secrets. Use a local `.env` for development and add `.env` to `.gitignore`.
+- For CI/deploy, use the provider's secret store or GitHub Actions Secrets.
+- If sensitive values were committed, remove them from history (with `git filter-repo` or BFG) and rotate the keys immediately.
+
+Git commands (PowerShell) to stop tracking a local `.env`:
 
 ```powershell
 # Stop tracking .env and commit the change
 git rm --cached .env; git commit -m "Remove .env from repository"; git push
-
-# If you need to remove secrets from history, consider using git filter-repo or BFG:
-# 1) Install git-filter-repo, then:
-#    git filter-repo --path .env --invert-paths
-# 2) Or use the BFG Repo-Cleaner (https://rtyley.github.io/bfg-repo-cleaner/)
-
-# After cleaning history, rotate any exposed keys immediately.
 ```
-
-- **CI / GitHub:** Put production secrets in GitHub Actions Secrets or your hosting provider's secret manager, then reference them in your deployment pipeline instead of committing them.
-
-If you want, I can run the `git rm --cached .env` command for you and prepare a commit. I can also guide you through removing secrets from history if needed — this is destructive, so I will only run it with your explicit approval.
-
-````
-# PR Sentinel — Local project
-
-## Project info
-
-This repository contains the PR Sentinel frontend. Edit locally or use your preferred deployment platform.
-
-## How can I edit this code?
-
-You can work locally with your own IDE. The only requirement is Node.js & npm (or an alternative package manager).
-
-Quick start:
-
-```sh
-# Clone the repository
-git clone <YOUR_GIT_URL>
-cd <YOUR_PROJECT_NAME>
-
-# Install dependencies
-npm install
-
-# Start the development server
-npm run dev
-```
-
-Alternatively, edit files directly on GitHub or use Codespaces if you prefer.
-
-## What technologies are used for this project?
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Deploy using your preferred hosting provider (Netlify, Vercel, Cloudflare Pages, etc.) and follow their documentation for Vite/React apps.
