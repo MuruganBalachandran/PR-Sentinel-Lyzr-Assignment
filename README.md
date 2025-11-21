@@ -1,8 +1,6 @@
 # PR Sentinel — Frontend
 
-## 🚀 Live Frontend
-
-👉 **Live URL: [live here](https://pr-sentinel-lyzr-assignment.vercel.app/)
+## Live URL: [live here](https://pr-sentinel-lyzr-assignment.vercel.app/)
 
 ---
 
