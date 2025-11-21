@@ -2,8 +2,7 @@
 
 ## 🚀 Live Frontend
 
-👉 **Live URL:** https://your-live-frontend-url-here.com  
-[live here](https://pr-sentinel-lyzr-assignment.vercel.app/)
+👉 **Live URL: [live here](https://pr-sentinel-lyzr-assignment.vercel.app/)
 
 ---
 
